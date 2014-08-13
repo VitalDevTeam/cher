@@ -30,7 +30,7 @@ function vtlshare_options_display() {
 ?>
     <div class="wrap">
         <h2>Share Buttons Settings</h2>
-        <p>Add the share buttons to templates using the tag <code>&lt;?php if (function_exists('share_buttons')) { share_buttons(); } ?></code>. You can also use the shortcode <code>[share_buttons]</code> in the editor.</p>
+        <p>Add the share buttons to templates using the tag <code>&lt;?php if (function_exists('share_buttons')) { share_buttons(); } ?></code>. You can also use the shortcode <code>[share-buttons]</code> in the editor.</p>
         <form method="post" action="options.php">
             <?php
                 settings_fields( 'vtlshare_options' );
