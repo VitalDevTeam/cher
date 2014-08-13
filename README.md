@@ -1,3 +1,5 @@
 # Vital Share Plugin
 
 WordPress plugin for adding simple, lightweight social sharing buttons
+
+Add the share buttons to templates using the tag `<?php if (function_exists('share_buttons')) { share_buttons(); } ?>`. You can also use the shortcode `[share_buttons]` in the editor.
