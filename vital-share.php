@@ -1,99 +1,255 @@
 <?php
 /*
-	Plugin Name: Vital Share Plugin
-	Plugin URI: https://vtldesign.com
-	Description: Custom, lightweight social sharing buttons
-	Author: Vital
-	Author URI: http://vtldesign.com
+    Plugin Name: Vital Share Plugin
+    Plugin URI: https://vtldesign.com
+    Description: Custom, lightweight social sharing buttons
+    Version: 1.0
+    Author: Vital
+    Author URI: http://vtldesign.com
 */
 
-function vital_share( $attr_twitter = null, $attr_items = null ) {
+/* ------------------------------------------------------------------------ *
+ * OPTIONS PAGE
+ * ------------------------------------------------------------------------ */
 
-	// parse variables
-	$twitter_account = $attr_twitter;
-	$item_toggles = $attr_items;
+function vtlshare_add_options_page() {
 
-	// get post content and urlencode it
-	global $post;
-	$browser_title_encoded = urlencode( trim( wp_title( '', false, 'right' ) ) );
-	$page_title_encoded = urlencode( get_the_title() );
-	$page_url_encoded = urlencode( get_permalink($post->ID) );
+    add_options_page(
+        'Share Buttons Settings',
+        'Share Buttons',
+        'administrator',
+        'vtlshare_buttons',
+        'vtlshare_options_display'
+    );
 
-	// create share items array
-	$share_items = array ();
+}
+add_action( 'admin_menu', 'vtlshare_add_options_page' );
 
-	// set each item
-	$item_facebook = array(
-		"class" => "facebook",
-		"href" => "http://www.facebook.com/sharer.php?u={$page_url_encoded}&amp;t={$browser_title_encoded}",
-		"text" => "Share on Facebook"
-	);
-	$item_twitter = array(
-		"class" => "twitter",
-		"href" => "http://twitter.com/share?text={$page_title_encoded}&amp;url={$page_url_encoded}&amp;via={$twitter_account}",
-		"text" => "Share on Twitter"
-	);
-	$item_google = array(
-		"class" => "google",
-		"href" => "http://plus.google.com/share?url={$page_url_encoded}",
-		"text" => "Share on Google+"
-	);
+function vtlshare_options_display() {
+?>
+    <div class="wrap">
+        <h2>Share Buttons Settings</h2>
+        <p>Add share buttons to templates using the tag <code>&lt;?php share_buttons(); ?></code> or the shortcode <code>[share-buttons]</code> in the editor.</p>
+        <form method="post" action="options.php">
+            <?php
 
-	// test whether to display each item
-	if($item_toggles) {
-		// explode into array
-		$item_toggles_array = explode( ",", $item_toggles );
-		// set each item on or off
-		$show_facebook = $item_toggles_array['0'];
-		$show_twitter = $item_toggles_array['1'];
-		$show_google = $item_toggles_array['2'];
-	}
-	else {
-		$display_all_items = 1;
-	}
+                settings_fields('vtlshare_display_options');
+                do_settings_sections('vtlshare_display_options');
 
-	// form array of items set to 1
-	if( $show_facebook==1 || $display_all_items ) {
-		array_push( $share_items, $item_facebook );
-	}
-	if( $show_twitter==1 || $display_all_items) {
-		array_push( $share_items, $item_twitter );
-	}
-	if( $show_google==1 || $display_all_items) {
-		array_push( $share_items, $item_google );
-	}
+                submit_button();
+            ?>
+        </form>
+    </div>
+<?php
+}
 
-	// if one or more items
-	if ( ! empty( $share_items ) ) {
-		// create output
-		$share_output = "<ul class=\"vtl-share\">\n";
-		foreach ( $share_items as $share_item ) {
-			$share_output .= "<li class=\"vtl-share-item\">\n";
-			$share_output .= "<a class=\"vtl-share-link ico-{$share_item['class']}\" href=\"{$share_item['href']}\" rel=\"nofollow\" target=\"_blank\">{$share_item['text']}</a>\n";
-			$share_output .= "</li>\n";
-		}
-		$share_output .= "</ul>";
-		// echo output
-		echo $share_output;
-	}
+
+/*  ==========================================================================
+     SETTINGS REGISTRATION
+    ==========================================================================  */
+
+/*   Display Options
+    --------------------------------------------------------------------------  */
+
+function vtlshare_default_display_options() {
+
+    $defaults = array(
+        'show_twitter'    => 1,
+        'show_facebook'   => 1,
+        'show_googleplus' => 1,
+        'show_linkedin'   => 1,
+    );
+    return apply_filters( 'vtlshare_default_display_options', $defaults );
+}
+
+function vtlshare_init_display_options() {
+
+    if ( false == get_option( 'vtlshare_display_options' ) ) {
+        add_option( 'vtlshare_display_options', apply_filters( 'vtlshare_default_display_options', vtlshare_default_display_options() ) );
+    }
+
+    add_settings_section(
+        'vtlshare_display_options_section',
+        'Display Options',
+        'vtlshare_display_options_callback',
+        'vtlshare_display_options'
+    );
+
+    add_settings_field(
+        'show_twitter',
+        'Twitter',
+        'vtlshare_show_twitter_callback',
+        'vtlshare_display_options',
+        'vtlshare_display_options_section'
+    );
+
+    add_settings_field(
+        'show_facebook',
+        'Facebook',
+        'vtlshare_show_facebook_callback',
+        'vtlshare_display_options',
+        'vtlshare_display_options_section'
+    );
+
+    add_settings_field(
+        'show_googleplus',
+        'Google+',
+        'vtlshare_show_googleplus_callback',
+        'vtlshare_display_options',
+        'vtlshare_display_options_section'
+    );
+
+    add_settings_field(
+        'show_linkedin',
+        'LinkedIn',
+        'vtlshare_show_linkedin_callback',
+        'vtlshare_display_options',
+        'vtlshare_display_options_section'
+    );
+
+    register_setting(
+        'vtlshare_display_options',
+        'vtlshare_display_options'
+    );
+
+}
+add_action( 'admin_init', 'vtlshare_init_display_options' );
+
+
+/*  ==========================================================================
+     SECTION CALLBACKS
+    ==========================================================================  */
+
+/*   Display Options
+    --------------------------------------------------------------------------  */
+
+function vtlshare_display_options_callback() {
+    echo '<p class="description">Select which buttons you wish to display</p>';
+}
+
+
+/*  ==========================================================================
+     FIELD CALLBACKS
+    ==========================================================================  */
+
+/*   Display Options
+    --------------------------------------------------------------------------  */
+
+function vtlshare_show_twitter_callback($args) {
+    $options = get_option('vtlshare_display_options');
+    $html = '<input type="checkbox" id="show_twitter" name="vtlshare_display_options[show_twitter]" value="1" ' . checked( 1, isset( $options['show_twitter'] ) ? $options['show_twitter'] : 0, false ) . '/>';
+    echo $html;
+}
+
+function vtlshare_show_facebook_callback($args) {
+    $options = get_option('vtlshare_display_options');
+    $html = '<input type="checkbox" id="show_facebook" name="vtlshare_display_options[show_facebook]" value="1" ' . checked( 1, isset( $options['show_facebook'] ) ? $options['show_facebook'] : 0, false ) . '/>';
+    echo $html;
+}
+
+function vtlshare_show_googleplus_callback($args) {
+    $options = get_option('vtlshare_display_options');
+    $html = '<input type="checkbox" id="show_googleplus" name="vtlshare_display_options[show_googleplus]" value="1" ' . checked( 1, isset( $options['show_googleplus'] ) ? $options['show_googleplus'] : 0, false ) . '/>';
+    echo $html;
+}
+function vtlshare_show_linkedin_callback($args) {
+    $options = get_option('vtlshare_display_options');
+    $html = '<input type="checkbox" id="show_linkedin" name="vtlshare_display_options[show_linkedin]" value="1" ' . checked( 1, isset( $options['show_linkedin'] ) ? $options['show_linkedin'] : 0, false ) . '/>';
+    echo $html;
+}
+
+
+
+/*  ==========================================================================
+     ENQUEUE PLUGIN FILES
+    ==========================================================================  */
+
+function vtlshare_enqueuer() {
+
+    if (!is_admin()) {
+        wp_enqueue_style( 'vital_share_css', plugins_url('vital-share.css', __FILE__), null, '1.0', screen );
+    }
+}
+
+add_action('wp_enqueue_scripts', 'vtlshare_enqueuer');
+
+
+/*  ==========================================================================
+     INITIALIZE AND RENDER BUTTONS
+    ==========================================================================  */
+
+function share_buttons() {
+
+    $display_options = get_option( 'vtlshare_display_options' );
+
+    $item_toggles = null;
+
+    global $post;
+    $post_title_encoded = urlencode( get_the_title() );
+    $post_url_encoded = urlencode( get_permalink($post->ID) );
+    $post_excerpt_encoded = urlencode( get_the_excerpt() );
+
+    $share_items = array ();
+
+    $twitter_btn = array(
+        "class" => "twitter",
+        "href" => "http://twitter.com/share?text={$post_title_encoded}&amp;url={$post_url_encoded}&amp;via=Vital_Design",
+        "text" => "Share on Twitter"
+    );
+    $facebook_btn = array(
+        "class" => "facebook",
+        "href" => "http://www.facebook.com/sharer.php?u={$post_url_encoded}&amp;t={$post_title_encoded}",
+        "text" => "Share on Facebook"
+    );
+    $googleplus_btn = array(
+        "class" => "googleplus",
+        "href" => "http://plus.google.com/share?url={$post_url_encoded}",
+        "text" => "Share on Google+"
+    );
+    $linkedin_btn = array(
+        "class" => "linkedin",
+        "href" => "http://www.linkedin.com/shareArticle?mini=true&url={$post_url_encoded}&title={$post_title_encoded}&summary={$post_excerpt_encoded}&source={$post_url_encoded}",
+        "text" => "Share on LinkedIn"
+    );
+
+    if ( isset( $display_options['show_twitter'] ) && $display_options[ 'show_twitter' ] ) {
+        array_push( $share_items, $twitter_btn );
+    }
+    if ( isset( $display_options['show_facebook'] ) && $display_options[ 'show_facebook' ] ) {
+        array_push( $share_items, $facebook_btn );
+    }
+    if ( isset( $display_options['show_googleplus'] ) && $display_options[ 'show_googleplus' ] ) {
+        array_push( $share_items, $googleplus_btn );
+    }
+    if ( isset( $display_options['show_linkedin'] ) && $display_options[ 'show_linkedin' ] ) {
+        array_push( $share_items, $linkedin_btn );
+    }
+
+    if ( ! empty( $share_items ) ) {
+        $share_output = "<ul id=\"vtlshare-buttons\" class=\"vtlshare-buttons\">\n";
+        foreach ( $share_items as $share_item ) {
+            $share_output .= "<li class=\"vtlshare-button vtlshare-button-{$share_item['class']}\">";
+            $share_output .= "<a class=\"vtlshare-link\" href=\"{$share_item['href']}\" title=\"{$share_item['text']}\" rel=\"nofollow\" target=\"_blank\">{$share_item['text']}</a>";
+            $share_output .= "</li>";
+        }
+        $share_output .= "</ul>";
+
+        echo $share_output;
+    }
 
 }
 
-// add shortcode to output buttons
-function vital_share_shortcode( $atts, $content = null ) {
-	// parse variables / set defaults
-	extract( shortcode_atts( array(
-		'twitter' => '',
-		'display' => '1,1,1',
-	), $atts ) );
-	// output buttons
-	ob_start();
-	vital_share( $twitter, $display );
-	$output_string = ob_get_contents();
-	ob_end_clean();
-	return force_balance_tags( $output_string );
+/*   Vital Share Buttons Shortcode
+    --------------------------------------------------------------------------  */
+
+function vtlshare_shortcode( $content = null ) {
+
+    ob_start();
+    share_buttons();
+    $output_string = ob_get_contents();
+    ob_end_clean();
+    return force_balance_tags( $output_string );
 }
 
-add_shortcode( 'share-buttons', 'vital_share_shortcode' );
-
+add_shortcode( 'share-buttons', 'vtlshare_shortcode' );
 ?>
