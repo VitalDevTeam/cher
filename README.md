@@ -1,4 +1,4 @@
-# Vital Share Plugin
+# Cher
 
 WordPress plugin for adding simple, lightweight social sharing buttons
 

@@ -1,18 +1,18 @@
 /**
- * Vital Share Styles
+ * Cher Default Styles
  */
 
-#vtlshare-buttons {
+#cher-buttons {
     margin: 0;
     text-align: center;
 }
-#vtlshare-buttons li {
+#cher-buttons li {
     margin: .25em .4em;
 }
-#vtlshare-buttons .vtlshare-button {
+#cher-buttons .cher-button {
     display: inline-block;
 }
-#vtlshare-buttons .vtlshare-link {
+#cher-buttons .cher-link {
     display: block;
     padding: .8em 1.125em .7em;
     border-radius: 3px;
@@ -24,13 +24,13 @@
     text-decoration: none;
     transition: all 100ms ease-in-out;
 }
-#vtlshare-buttons .vtlshare-link:before {
+#cher-buttons .cher-link:before {
     position: relative;
     top: -1px;
     margin-right: .375em;
     vertical-align: middle;
     speak: none;
-    font-family: 'vtlshare-icons';
+    font-family: 'cher-icons';
     font-size: 1.5em;
     font-style: normal;
     font-weight: normal;
@@ -40,49 +40,49 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-#vtlshare-buttons .vtlshare-button-twitter .vtlshare-link {
+#cher-buttons .cher-button-twitter .cher-link {
     background: #02adee;
 }
-#vtlshare-buttons .vtlshare-button-twitter .vtlshare-link:hover {
+#cher-buttons .cher-button-twitter .cher-link:hover {
     background: #0288bb;
 }
-#vtlshare-buttons .vtlshare-button-twitter .vtlshare-link:before {
+#cher-buttons .cher-button-twitter .cher-link:before {
     content: "\e600";
 }
-#vtlshare-buttons .vtlshare-button-facebook .vtlshare-link {
+#cher-buttons .cher-button-facebook .cher-link {
     background: #3b5a99;
 }
-#vtlshare-buttons .vtlshare-button-facebook .vtlshare-link:hover {
+#cher-buttons .cher-button-facebook .cher-link:hover {
     background: #2d4474;
 }
-#vtlshare-buttons .vtlshare-button-facebook .vtlshare-link:before {
+#cher-buttons .cher-button-facebook .cher-link:before {
     content: "\e601";
 }
-#vtlshare-buttons .vtlshare-button-googleplus .vtlshare-link {
+#cher-buttons .cher-button-googleplus .cher-link {
     background: #de4b39;
 }
-#vtlshare-buttons .vtlshare-button-googleplus .vtlshare-link:hover {
+#cher-buttons .cher-button-googleplus .cher-link:hover {
     background: #c33221;
 }
-#vtlshare-buttons .vtlshare-button-googleplus .vtlshare-link:before {
+#cher-buttons .cher-button-googleplus .cher-link:before {
     content: "\e602";
 }
-#vtlshare-buttons .vtlshare-button-linkedin .vtlshare-link {
+#cher-buttons .cher-button-linkedin .cher-link {
     background: #017cb7;
 }
-#vtlshare-buttons .vtlshare-button-linkedin .vtlshare-link:hover {
+#cher-buttons .cher-button-linkedin .cher-link:hover {
     background: #015a84;
 }
-#vtlshare-buttons .vtlshare-button-linkedin .vtlshare-link:before {
+#cher-buttons .cher-button-linkedin .cher-link:before {
     content: "\e603";
 }
 
 /**
- * Vital Share Icons
+ * Cher Icons
  */
 
 @font-face {
-    font-family: 'vtlshare-icons';
+    font-family: 'cher-icons';
     src: url(data:application/x-font-ttf;charset=utf-8;base64,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) format('truetype'),
          url(data:application/font-woff;charset=utf-8;base64,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) format('woff');
     font-weight: normal;
