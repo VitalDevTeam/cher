@@ -1,7 +1,22 @@
 # Cher
 
-WordPress plugin for adding simple, lightweight social sharing buttons
+WordPress plugin for central management of your website's social network profiles.
 
-Add the share buttons to templates using the tag `<?php if (function_exists('share_buttons')) { share_buttons(); } ?>`. You can also use the shortcode `[share-buttons]` in the editor.
+## Usage
 
-![](http://news.sagacom.com/wp-content/blogs.dir/3/files/2014/08/cher-620x400.jpg)
+Refer to plugin settings pages for instructions.
+
+## Features
+### Global Social Profile URLs
+Manage your profile URLs in one place and print them into your templates with a simple tag.
+
+![Customizing profile URLs](http://i.imgur.com/JQVPpkJ.png)
+
+### Customizable Share Links
+Lightweight, bare-bones share links that you can customize and style to your heart's content.
+
+![Customizing share links](http://i.imgur.com/Ad40hBy.png)
+
+## I got you babe.
+
+![Cher](http://i.imgur.com/exbh6aF.jpg)
