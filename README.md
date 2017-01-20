@@ -17,6 +17,11 @@ Lightweight, bare-bones share links that you can customize and style to your hea
 
 ![Customizing share links](http://i.imgur.com/Ad40hBy.png)
 
+## Upcoming Features
+
+* Optional counters on the share links
+* Plugin hooks to customize output
+
 ## I got you babe.
 
 ![Cher](http://i.imgur.com/exbh6aF.jpg)
