@@ -25,7 +25,7 @@ if (!function_exists('cher_links')) {
             return;
         }
 
-        $html = '<div class="cher"><ul class="cher-links">';
+        $html = '<ul class="cher-links">';
 
         global $post;
 
@@ -125,7 +125,7 @@ if (!function_exists('cher_links')) {
 
         }
 
-        $html .= '</ul></div>';
+        $html .= '</ul>';
 
         echo $html;
 
