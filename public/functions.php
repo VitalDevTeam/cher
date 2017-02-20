@@ -15,9 +15,9 @@ if (!function_exists('get_social_url')) {
     }
 }
 
-if (!function_exists('cher_buttons')) {
+if (!function_exists('cher_links')) {
 
-    function cher_buttons() {
+    function cher_links() {
 
         $cher_show_links = get_option('cher_show_links');
 
@@ -133,12 +133,12 @@ if (!function_exists('cher_buttons')) {
 
     function cher_shortcode($content = null) {
         ob_start();
-        cher_buttons();
+        cher_links();
         $output_string = ob_get_contents();
         ob_end_clean();
         return force_balance_tags($output_string);
     }
 
-    add_shortcode('cher-buttons', 'cher_shortcode');
+    add_shortcode('cher-links', 'cher_shortcode');
 
 }
