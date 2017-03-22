@@ -17,7 +17,7 @@ if (!function_exists('get_social_url')) {
 
 if (!function_exists('cher_links')) {
 
-    function cher_links() {
+    function cher_links($return) {
 
         $cher_show_links = get_option('cher_show_links');
 
@@ -127,15 +127,15 @@ if (!function_exists('cher_links')) {
 
         $html .= '</ul>';
 
-        echo $html;
+        if(!$return){
+            echo $html;
+        }
 
+        return $html;
     }
 
     function cher_shortcode($content = null) {
-        ob_start();
-        cher_links();
-        $output_string = ob_get_contents();
-        ob_end_clean();
+        $output_string = cher_links(true);
         return force_balance_tags($output_string);
     }
 
