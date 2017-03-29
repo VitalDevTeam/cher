@@ -127,7 +127,7 @@ if (!function_exists('cher_links')) {
 
         $html .= '</ul>';
 
-        if(!$return){
+        if (!$return) {
             echo $html;
         }
 
