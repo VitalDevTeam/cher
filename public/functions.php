@@ -28,6 +28,7 @@ if (!function_exists('cher_links')) {
         $html = '<ul class="cher-links">';
 
         global $post;
+        $post = (object) $post;
 
         $title = get_the_title();
         $excerpt = get_the_excerpt();
