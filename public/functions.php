@@ -30,7 +30,7 @@ if (!function_exists('cher_links')) {
         global $post;
         $post = (object) $post;
 
-        $title = get_the_title();
+        $title = html_entity_decode(get_the_title());
         $excerpt = get_the_excerpt();
         $url = get_permalink($post->ID);
         $image_src = '';
