@@ -17,7 +17,7 @@ if (!function_exists('get_social_url')) {
 
 if (!function_exists('cher_links')) {
 
-    function cher_links($return) {
+    function cher_links($echo = true) {
 
         $cher_show_links = get_option('cher_show_links');
 
@@ -128,11 +128,11 @@ if (!function_exists('cher_links')) {
 
         $html .= '</ul>';
 
-        if (!$return) {
-            echo $html;
-        }
-
-        return $html;
+		if ($echo === true) {
+			echo $html;
+        } else {
+			return $html;
+		}
     }
 
     function cher_shortcode($content = null) {
