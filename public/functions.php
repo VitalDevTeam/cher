@@ -58,6 +58,11 @@ if (!function_exists('cher_links')) {
                 ),
                 'title' => 'Share on Facebook'
             ),
+            'messenger' => array(
+                'id' => 'messenger',
+                'href_base' => $url,
+                'title' => 'Messenger'
+            ),
             'linkedin' => array(
                 'id' => 'linkedin',
                 'href_base' => 'https://www.linkedin.com/shareArticle',
@@ -108,6 +113,8 @@ if (!function_exists('cher_links')) {
                 $share_url = $profile['href_base'] . '?';
                 $share_url .= 'subject=' . $profile['href_params']['subject'];
                 $share_url .= '&amp;body=' . $profile['href_params']['body'];
+            } elseif ($share_id === 'messenger') {
+                $share_url = $profile['href_base'];
             } else {
                 $share_url = $profile['href_base'] . '?';
                 $share_url .= http_build_query($profile['href_params']);
@@ -116,7 +123,12 @@ if (!function_exists('cher_links')) {
             $share_title = $profile['title'];
 
             $html .= '<li class="cher-link-item cher-link-' . $share_id . '">';
-            $html .= '<a id="cher-link-' . $share_id . '" class="cher-link" href="' . $share_url . '" title="' . esc_attr($share_title) . '" rel="nofollow,noopener"';
+
+            if ($share_id === 'messenger') {
+                $html .= '<a id="cher-link-' . $share_id . '" class="cher-link" href="http://www.facebook.com/dialog/send?app_id=307316345962358&amp;link=' . $share_url . '&amp;redirect_uri=' . $share_url . '" title="' . esc_attr($share_title) . '" rel="nofollow,noopener"';
+            } else {
+                $html .= '<a id="cher-link-' . $share_id . '" class="cher-link" href="' . $share_url . '" title="' . esc_attr($share_title) . '" rel="nofollow,noopener"';
+            }
 
             if ($share_id !== 'email') {
                 $html .= ' target="_blank"';

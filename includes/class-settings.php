@@ -175,7 +175,7 @@ class Cher_Settings {
 					'label'			=> __( 'Show Links', 'cher' ),
 					'description'	=> __( 'Select which links to display.', 'cher' ),
 					'type'			=> 'checkbox_multi',
-					'options'		=> array( 'twitter' => 'Twitter', 'facebook' => 'Facebook', 'linkedin' => 'LinkedIn', 'googleplus' => 'Google+', 'pinterest' => 'Pinterest', 'email' => 'Email' ),
+					'options'		=> array( 'twitter' => 'Twitter', 'facebook' => 'Facebook', 'messenger' => 'Messenger', 'linkedin' => 'LinkedIn', 'googleplus' => 'Google+', 'pinterest' => 'Pinterest', 'email' => 'Email' ),
 					'default'		=> array()
 				)
 			)
