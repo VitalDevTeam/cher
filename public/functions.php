@@ -31,6 +31,7 @@ if (!function_exists('cher_links')) {
         $post = (object) $post;
 
         $title = html_entity_decode(get_the_title());
+        $emailTitle = str_replace("&", "%26", $title);
         $excerpt = get_the_excerpt();
         $url = get_permalink($post->ID);
         $image_src = '';
@@ -91,7 +92,7 @@ if (!function_exists('cher_links')) {
                 'id' => 'email',
                 'href_base' => 'mailto:',
                 'href_params' => array(
-                    'subject' => $title,
+                    'subject' => $emailTitle,
                     'body' => $title . '%0A' . $url
                 ),
                 'title' => 'Share via Email'
