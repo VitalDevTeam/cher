@@ -9,9 +9,11 @@ if (!function_exists('get_social_url')) {
     function cher_profile_url($id = null) {
         if ($id === null) return;
         $url = get_option('cher_' . $id . '_url');
-        if (!empty($url)) {
+		if ($url !== null) {
             return $url;
-        }
+        } else {
+			return false;
+		}
     }
 }
 
