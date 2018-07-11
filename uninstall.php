@@ -15,14 +15,14 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 }
 
 function cher_delete_options() {
-    global $wpdb;
-    $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE 'cher_%'");
+	global $wpdb;
+	$wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE 'cher_%'");
 }
 
 $cher_delete_options = get_option('cher_delete_options', false);
 
 if ($cher_delete_options === 'on') {
-    cher_delete_options();
+	cher_delete_options();
 }
 
 // Do something here if plugin is being uninstalled.

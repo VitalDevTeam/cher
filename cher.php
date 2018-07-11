@@ -11,7 +11,9 @@
  * Tested up to: 4.7.1
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit;
+if (! defined( 'ABSPATH' )) {
+	exit;
+}
 
 // Load plugin class files
 require_once( 'includes/class-plugin.php' );
@@ -26,14 +28,14 @@ require_once( 'public/functions.php' );
 /**
  * Returns the main instance of the plugin to prevent the need to use globals.
  */
-function Cher() {
+function _bootstrap_cher() {
 	$instance = Cher_Plugin_Template::instance( __FILE__, '1.0.0' );
 
-	if ( is_null( $instance->settings ) ) {
+	if (is_null( $instance->settings)) {
 		$instance->settings = Cher_Settings::instance( $instance );
 	}
 
 	return $instance;
 }
 
-Cher();
+_bootstrap_cher();

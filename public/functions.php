@@ -1,160 +1,210 @@
 <?php
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+	exit;
+}
 
-if (!function_exists('get_social_url')) {
+if (!function_exists('cher_profile_url')) {
 
-    /**
-     * Get social profile URL option from the database
-     */
-    function cher_profile_url($id = null) {
-        if ($id === null) return;
-        $url = get_option('cher_' . $id . '_url');
-		if ($url !== null) {
-            return $url;
-        } else {
-			return false;
+	/**
+	 * Get social profile URL option from the database
+	 */
+	function cher_profile_url($id = null) {
+		return get_option("cher_{$id}_url");
+	}
+}
+
+if (!function_exists('cher_profiles')) {
+	function cher_profiles($return = false) {
+		$cher_settings = Cher_Settings::instance(null)->settings;
+		if (!isset($cher_settings['profile_urls'])) {
+			return;
 		}
-    }
+
+		$profile_links = [];
+		$profile_fields = $cher_settings['profile_urls']['fields'];
+		foreach ($profile_fields as $profile) {
+			$url = get_option("cher_{$profile['id']}");
+			if (!$url) {
+				continue;
+			}
+
+			$id = str_replace('_url', '', $profile['id']);
+			$profile_links[] = cher_profile_link($id, $url, $profile['label']);
+		}
+
+		$ret = sprintf('<div class="profile-links">%s</div>', implode('', $profile_links));
+
+		if (!$return) {
+			echo $ret;
+		}
+
+		return $ret;
+	}
+}
+
+if (!function_exists('cher_profile_link')) {
+	function cher_profile_link($id, $url, $label) {
+		$label = apply_filters('cher_profile_link_label', $label, $id);
+		$label = apply_filters("cher_profile_link_label_{$id}", $label, $id);
+
+		return sprintf('<a href="%s" class="cher-profile-link %s" target="_blank">%s</a>', $url, $id, $label);
+	}
+}
+
+if (!function_exists('cher_get_schemes')) {
+	function cher_get_schemes($post_id = null) {
+		$cher_show_links = get_option('cher_show_links');
+		if (empty($cher_show_links)) {
+			return [];
+		}
+
+		if (!$post_id) {
+			$post_id = get_the_ID();
+		}
+
+		$title = html_entity_decode(get_the_title($post_id));
+		$email_title = str_replace('&', '%26', $title);
+		$post_content = apply_filters('the_content', get_post_field('post_content', $post_id));
+		$excerpt = wp_trim_words($post_content);
+		$url = get_permalink($post_id);
+		$image_src = '';
+		if (has_post_thumbnail($post_id)) {
+			$image_src = get_the_post_thumbnail_url($post_id, 'large');
+		}
+
+		$ret = [
+			'twitter'    => [
+				'id'          => 'twitter',
+				'title'       => 'Share on Twitter',
+				'href_base'   => 'https://twitter.com/intent/tweet/',
+				'href_params' => [
+					'url'  => $url,
+					'text' => $title,
+				],
+			],
+
+			'facebook'   => [
+				'id'          => 'facebook',
+				'title'       => 'Share on Facebook',
+				'href_base'   => 'https://facebook.com/sharer.php',
+				'href_params' => [
+					'u' => $url,
+				],
+			],
+
+			'messenger'  => [
+				'id'          => 'messenger',
+				'title'       => 'Messenger',
+				'href_base'   => $url,
+				'href_params' => [],
+			],
+
+			'linkedin'   => [
+				'id'          => 'linkedin',
+				'title'       => 'Follow us on LinkedIn',
+				'href_base'   => 'https://www.linkedin.com/shareArticle',
+				'href_params' => [
+					'mini'    => 'true',
+					'url'     => $url,
+					'title'   => $title,
+					'summary' => $excerpt,
+					'source'  => $url,
+				],
+			],
+
+			'googleplus' => [
+				'id'          => 'googleplus',
+				'title'       => 'Share on Google+',
+				'href_base'   => 'https://plus.google.com/share',
+				'href_params' => [
+					'url' => $url,
+				],
+			],
+
+			'pinterest'  => [
+				'id'          => 'pinterest',
+				'title'       => 'Share on Pinterest',
+				'href_base'   => 'http://pinterest.com/pin/create/button/',
+				'href_params' => [
+					'url'         => $url,
+					'media'       => $image_src,
+					'description' => $title,
+				],
+			],
+
+			'email'      => [
+				'id'          => 'email',
+				'title'       => 'Share via Email',
+				'href_base'   => 'mailto:',
+				'href_params' => [
+					'subject' => $email_title,
+					'body'    => $title . '%0A' . $url,
+				],
+			],
+		];
+
+		return array_filter($ret, function($s) use ($cher_show_links) {
+			return in_array($s['id'], $cher_show_links);
+		});
+	}
 }
 
 if (!function_exists('cher_links')) {
+	function cher_links($return = false, $post_id = null) {
+		$share_links = [];
+		$share_schemes = cher_get_schemes($post_id);
 
-    function cher_links($echo = true) {
+		foreach ($share_schemes as $share_id => $profile) {
+			$share_title = $profile['title'];
+			$href_base = $profile['href_base'];
+			$href_params = $profile['href_params'];
 
-        $cher_show_links = get_option('cher_show_links');
+			$query_string = http_build_query($href_params);
+			if ($share_id === 'email') {
+				$query_string = str_replace('&', '&amp;', $query_string);
+			}
 
-        if (empty($cher_show_links)) {
-            return;
-        }
-
-        $html = '<ul class="cher-links">';
-
-        global $post;
-        $post = (object) $post;
-
-        $title = html_entity_decode(get_the_title());
-        $emailTitle = str_replace("&", "%26", $title);
-        $excerpt = get_the_excerpt();
-        $url = get_permalink($post->ID);
-        $image_src = '';
-
-        if (has_post_thumbnail()) {
-            $image_src = get_the_post_thumbnail_url($post->ID, 'large');
-        }
-
-        $share_schemes = array(
-            'twitter' => array(
-                'id' => 'twitter',
-                'href_base' => 'https://twitter.com/intent/tweet/',
-                'href_params' => array(
-                    'url' => $url,
-                    'text' => $title
-                ),
-                'title' => 'Share on Twitter'
-            ),
-            'facebook' => array(
-                'id' => 'facebook',
-                'href_base' => 'https://facebook.com/sharer.php',
-                'href_params' => array(
-                    'u' => $url
-                ),
-                'title' => 'Share on Facebook'
-            ),
-            'messenger' => array(
-                'id' => 'messenger',
-                'href_base' => $url,
-                'title' => 'Messenger'
-            ),
-            'linkedin' => array(
-                'id' => 'linkedin',
-                'href_base' => 'https://www.linkedin.com/shareArticle',
-                'href_params' => array(
-                    'mini' => 'true',
-                    'url' => $url,
-                    'title' => $title,
-                    'summary' => $excerpt,
-                    'source' => $url
-                ),
-                'title' => 'Share on LinkedIn'
-            ),
-            'googleplus' => array(
-                'id' => 'googleplus',
-                'href_base' => 'https://plus.google.com/share',
-                'href_params' => array(
-                    'url' => $url
-                ),
-                'title' => 'Share on Google+'
-            ),
-            'pinterest' => array(
-                'id' => 'pinterest',
-                'href_base' => 'http://pinterest.com/pin/create/button/',
-                'href_params' => array(
-                    'url' => $url,
-                    'media' => $image_src,
-                    'description' => $title
-                ),
-                'title' => 'Share on Pinterest'
-            ),
-            'email' => array(
-                'id' => 'email',
-                'href_base' => 'mailto:',
-                'href_params' => array(
-                    'subject' => $emailTitle,
-                    'body' => $title . '%0A' . $url
-                ),
-                'title' => 'Share via Email'
-            ),
-        );
-
-        foreach ($cher_show_links as $link) {
-
-            $profile = $share_schemes[$link];
-            $share_id = $profile['id'];
-
-            if ($share_id === 'email') {
-                $share_url = $profile['href_base'] . '?';
-                $share_url .= 'subject=' . $profile['href_params']['subject'];
-                $share_url .= '&amp;body=' . $profile['href_params']['body'];
-            } elseif ($share_id === 'messenger') {
-                $share_url = $profile['href_base'];
-            } else {
-                $share_url = $profile['href_base'] . '?';
-                $share_url .= http_build_query($profile['href_params']);
-            }
-
-            $share_title = $profile['title'];
-
-            $html .= '<li class="cher-link-item cher-link-' . $share_id . '">';
-
-            if ($share_id === 'messenger') {
-                $html .= '<a id="cher-link-' . $share_id . '" class="cher-link" href="http://www.facebook.com/dialog/send?app_id=307316345962358&amp;link=' . $share_url . '&amp;redirect_uri=' . $share_url . '" title="' . esc_attr($share_title) . '" rel="nofollow,noopener"';
-            } else {
-                $html .= '<a id="cher-link-' . $share_id . '" class="cher-link" href="' . $share_url . '" title="' . esc_attr($share_title) . '" rel="nofollow,noopener"';
-            }
-
-            if ($share_id !== 'email') {
-                $html .= ' target="_blank"';
-            }
-
-            $html .= '><span class="cher-link-text">' . esc_html($share_title) . '</span>';
-            $html .= "</a></li>";
-
-        }
-
-        $html .= '</ul>';
-
-		if ($echo === true) {
-			echo $html;
-        } else {
-			return $html;
+			$share_url = sprintf('%s?%s', $href_base, $query_string);
+			$share_links[] = sprintf('<li class="cher-link-item cher-link-%s">%s</li>', $share_id, cher_link($share_id, $share_url, $share_title));
 		}
-    }
 
-    function cher_shortcode($content = null) {
-        $output_string = cher_links(true);
-        return force_balance_tags($output_string);
-    }
+		$html = sprintf('<ul class="cher-links">%s</ul>', implode('', $share_links));
 
-    add_shortcode('cher-links', 'cher_shortcode');
+		if (!$return) {
+			echo $html;
+		}
 
+		return $html;
+	}
+}
+
+if (!function_exists('cher_link')) {
+	function cher_link($share_id, $share_url, $share_title) {
+		$share_title = apply_filters('cher_link_title', $share_title, $share_id);
+		$share_title = apply_filters("cher_{$share_id}_link_title", $share_title, $share_id);
+
+		$share_url = apply_filters('cher_link_url', $share_url, $share_id);
+		$share_url = apply_filters("cher_{$share_id}_link_url", $share_url, $share_id);
+
+		$ret = sprintf('<a href="%s" class="cher-link cher-link-%s" title="%s" target="_blank" rel="nofollow,noopener"><span class="cher-link-text">%s</span></a>',
+			$share_url,
+			$share_id,
+			esc_attr($share_title),
+			esc_html($share_title)
+		);
+
+		$ret = apply_filters('cher_link', $ret);
+		$ret = apply_filters("cher_link_{$share_id}", $ret);
+
+		return $ret;
+	}
+}
+
+if (!function_exists('cher_shortcode')) {
+	function cher_shortcode($content = null) {
+		$output_string = cher_links(true);
+		return force_balance_tags($output_string);
+	}
+
+	add_shortcode('cher-links', 'cher_shortcode');
 }
