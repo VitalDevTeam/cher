@@ -43,11 +43,11 @@ if (!function_exists('cher_profiles')) {
 }
 
 if (!function_exists('cher_profile_link')) {
-	function cher_profile_link($id, $url, $label) {
-		$label = apply_filters('cher_profile_link_label', $label, $id);
-		$label = apply_filters("cher_profile_link_label_{$id}", $label, $id);
+	function cher_profile_link($id, $url, $title) {
+		$title = apply_filters('cher_profile_link_title', $title, $id);
+		$title = apply_filters("cher_profile_link_title_{$id}", $title, $id);
 
-		return sprintf('<a href="%s" class="cher-profile-link %s" target="_blank">%s</a>', $url, $id, $label);
+		return sprintf('<a href="%s" class="cher-profile-link %s" target="_blank">%s</a>', $url, $id, $title);
 	}
 }
 
