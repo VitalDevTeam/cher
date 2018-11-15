@@ -73,7 +73,7 @@ if (!function_exists('cher_links')) {
                     'url' => $url,
                     'title' => $title,
                     'summary' => $excerpt,
-                    'source' => $url
+					'source' => get_bloginfo('name'),
                 ),
                 'title' => 'Share on LinkedIn'
             ),
