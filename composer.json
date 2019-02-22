@@ -1,0 +1,19 @@
+{
+	"name": "vital/cher",
+	"description": "WordPress plugin for adding simple, lightweight social sharing buttons",
+	"keywords": ["wordpress", "social", "sharing"],
+	"type": "wordpress-plugin",
+	"homepage": "https://github.com/VitalDevTeam/Cher",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Vital",
+			"email": "hello@vtldesign.com",
+            "homepage": "https://vtldesign.com/"
+		}
+	],
+	"require": {
+		"php": ">=5.3.2",
+		"composer/installers": "~1.0"
+	}
+}
