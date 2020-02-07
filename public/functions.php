@@ -85,7 +85,8 @@ if (!function_exists('cher_links')) {
 				'href_base' => 'https://twitter.com/intent/tweet/',
 				'href_params' => array(
 					'url' => $url,
-					'text' => $title
+                    		'text' => $title,
+			    	'via' => array_pop(explode('/', get_option('cher_twitter_url'))),
 				),
 				'title' => 'Share on Twitter'
 			),
