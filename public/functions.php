@@ -79,14 +79,17 @@ if (!function_exists('cher_links')) {
 			$image_src = get_the_post_thumbnail_url($post->ID, 'large');
 		}
 
+		$twitter = explode('/', get_option('cher_twitter_url'));
+		$vai = array_pop($twitter);
+
 		$share_schemes = array(
 			'twitter' => array(
 				'id' => 'twitter',
 				'href_base' => 'https://twitter.com/intent/tweet/',
 				'href_params' => array(
 					'url' => $url,
-                    		'text' => $title,
-			    	'via' => array_pop(explode('/', get_option('cher_twitter_url'))),
+                    'text' => $title,
+			    	'via' => $vai,
 				),
 				'title' => 'Share on Twitter'
 			),
