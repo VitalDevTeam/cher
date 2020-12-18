@@ -34,7 +34,6 @@ if (!function_exists('cher_profile_urls')) {
 				'twitter',
 				'facebook',
 				'linkedin',
-				'googleplus',
 				'youtube',
 				'vimeo',
 				'instagram',
@@ -117,14 +116,6 @@ if (!function_exists('cher_links')) {
 					'source' => get_bloginfo('name'),
 				),
 				'title' => 'Share on LinkedIn'
-			),
-			'googleplus' => array(
-				'id' => 'googleplus',
-				'href_base' => 'https://plus.google.com/share',
-				'href_params' => array(
-					'url' => $url
-				),
-				'title' => 'Share on Google+'
 			),
 			'pinterest' => array(
 				'id' => 'pinterest',
