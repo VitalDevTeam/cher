@@ -273,12 +273,12 @@ class Cher_Admin_API {
 	}
 
 	/**
-	 * Dispay field in metabox
+	 * Display field in metabox
 	 * @param  array  $field Field data
 	 * @param  object $post  Post object
 	 * @return void
 	 */
-	public function display_meta_box_field ( $field = array(), $post ) {
+	public function display_meta_box_field ( $field = array(), $post = false ) {
 
 		if ( ! is_array( $field ) || 0 == count( $field ) ) return;
 
