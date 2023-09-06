@@ -77,6 +77,14 @@ class Cher_Plugin_Template {
 	public $script_suffix;
 
 	/**
+	 * Load API for generic admin
+	 * @var     string
+	 * @access  public
+	 * @since   1.0.0
+	 */
+	public $admin;
+
+	/**
 	 * Constructor function.
 	 * @access  public
 	 * @since   1.0.0
