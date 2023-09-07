@@ -177,11 +177,13 @@ if (!function_exists('cher_links')) {
 
 			if ($share_id === 'messenger') {
 				$html .= '<a id="cher-link-' . $share_id . '" class="cher-link" href="http://www.facebook.com/dialog/send?app_id=307316345962358&amp;link=' . $share_url . '&amp;redirect_uri=' . $share_url . '" title="' . esc_attr($share_title) . '" rel="nofollow,noopener"';
+            } elseif ($share_id === 'link') {
+                $html .= '<a id="cher-link-' . $share_id . '" class="cher-link click-copy" href="' . $share_url . '" title="' . esc_attr($share_title) . '" rel="nofollow,noopener"';
 			} else {
 				$html .= '<a id="cher-link-' . $share_id . '" class="cher-link" href="' . $share_url . '" title="' . esc_attr($share_title) . '" rel="nofollow,noopener"';
 			}
 
-			if ($share_id !== 'email') {
+			if ($share_id !== 'email' && $share_id !== 'link') {
 				$html .= ' target="_blank"';
 			}
 
