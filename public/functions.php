@@ -11,9 +11,9 @@ if (!function_exists('get_social_url')) {
 		$url = get_option('cher_' . $id . '_url');
 		if ($url !== null) {
 			return $url;
-		} else {
-			return false;
 		}
+		
+		return false;
 	}
 }
 
@@ -82,76 +82,93 @@ if (!function_exists('cher_links')) {
 		$vai = array_pop($twitter);
 
 		$share_schemes = array(
-			'twitter' => array(
-				'id' => 'twitter',
-				'href_base' => 'https://twitter.com/intent/tweet/',
+			'twitter'   => array(
+				'id'          => 'twitter',
+				'href_base'   => 'https://twitter.com/intent/tweet/',
+				'title'       => 'Share on Twitter',
 				'href_params' => array(
-					'url' => $url,
+					'url'  => $url,
                     'text' => $title,
-			    	'via' => $vai,
+			    	'via'  => $vai,
 				),
-				'title' => 'Share on Twitter'
 			),
-			'facebook' => array(
-				'id' => 'facebook',
-				'href_base' => 'https://facebook.com/sharer.php',
+			'facebook'  => array(
+				'id'          => 'facebook',
+				'title'       => 'Share on Facebook',
+				'href_base'   => 'https://facebook.com/sharer.php',
 				'href_params' => array(
 					'u' => $url
 				),
-				'title' => 'Share on Facebook'
 			),
 			'messenger' => array(
-				'id' => 'messenger',
+				'id'        => 'messenger',
+				'title'     => 'Messenger',
 				'href_base' => $url,
-				'title' => 'Messenger'
 			),
-			'linkedin' => array(
-				'id' => 'linkedin',
-				'href_base' => 'https://www.linkedin.com/shareArticle',
+			'linkedin'  => array(
+				'id'          => 'linkedin',
+				'title'       => 'Share on LinkedIn',
+				'href_base'   => 'https://www.linkedin.com/shareArticle',
 				'href_params' => array(
-					'mini' => 'true',
-					'url' => $url,
-					'title' => $title,
+					'mini'    => 'true',
+					'url'     => $url,
+					'title'   => $title,
 					'summary' => $excerpt,
-					'source' => get_bloginfo('name'),
+					'source'  => get_bloginfo('name'),
 				),
-				'title' => 'Share on LinkedIn'
 			),
 			'pinterest' => array(
-				'id' => 'pinterest',
-				'href_base' => 'http://pinterest.com/pin/create/button/',
+				'id'          => 'pinterest',
+				'title'       => 'Share on Pinterest',
+				'href_base'   => 'http://pinterest.com/pin/create/button/',
 				'href_params' => array(
-					'url' => $url,
-					'media' => $image_src,
+					'url'         => $url,
+					'media'       => $image_src,
 					'description' => $title
 				),
-				'title' => 'Share on Pinterest'
 			),
-			'email' => array(
-				'id' => 'email',
-				'href_base' => 'mailto:',
+			'email'     => array(
+				'id'          => 'email',
+				'title'       => 'Share via Email',
+				'href_base'   => 'mailto:',
 				'href_params' => array(
 					'subject' => $emailTitle,
-					'body' => $title . '%0A' . $url
+					'body'    => $title . '%0A' . $url
 				),
-				'title' => 'Share via Email'
 			),
+			'link'      => array(
+				'id'          => 'link',
+				'title'       => 'Copy Link',
+				'href_base'   => $url,
+				'href_params' => array(),
+			)
 		);
 
 		foreach ($cher_show_links as $link) {
 
+			if (!array_key_exists($link, $share_schemes)) {
+				continue;
+			}
+
 			$profile = $share_schemes[$link];
 			$share_id = $profile['id'];
 
-			if ($share_id === 'email') {
-				$share_url = $profile['href_base'] . '?';
-				$share_url .= 'subject=' . $profile['href_params']['subject'];
-				$share_url .= '&amp;body=' . $profile['href_params']['body'];
-			} elseif ($share_id === 'messenger') {
-				$share_url = $profile['href_base'];
-			} else {
-				$share_url = $profile['href_base'] . '?';
-				$share_url .= http_build_query($profile['href_params']);
+			switch ($share_id) {
+				case 'email':
+					$share_url = $profile['href_base'] . '?';
+					$share_url .= 'subject=' . $profile['href_params']['subject'];
+					$share_url .= '&amp;body=' . $profile['href_params']['body'];
+					break;
+				
+				case 'messenger':
+				case 'link':
+					$share_url = $profile['href_base'];
+					break;
+					
+				default:
+					$share_url = $profile['href_base'] . '?';
+					$share_url .= http_build_query($profile['href_params']);
+					break;
 			}
 
 			$share_title = $profile['title'];
