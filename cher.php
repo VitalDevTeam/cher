@@ -13,6 +13,14 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+require 'plugin-update-checker/plugin-update-checker.php';
+
+$update_checker = Puc_v4_Factory::buildUpdateChecker(
+	'https://github.com/VitalDevTeam/cher',
+	__FILE__,
+	'cher'
+);
+
 // Load plugin class files
 require_once( 'includes/class-plugin.php' );
 require_once( 'includes/class-settings.php' );
