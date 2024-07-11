@@ -5,7 +5,7 @@
  * Plugin URI: https://github.com/VitalDevTeam/cher/
  * Description: Easy management of social profiles and social share links for developers.
  * Author: Vital
- * Author URI: https://vtldesign.com
+ * Author URI: https://vitaldesign.com
  * Text Domain: cher
  * Requires at least: 4.0
  * Tested up to: 6.3.1
