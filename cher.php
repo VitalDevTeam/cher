@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: Cher
- * Version: 2.1
+ * Version: 2.2.0
  * Plugin URI: https://github.com/VitalDevTeam/cher/
  * Description: Easy management of social profiles and social share links for developers.
  * Author: Vital

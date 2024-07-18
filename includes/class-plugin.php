@@ -135,7 +135,25 @@ class Cher_Plugin_Template {
 	 * @return  void
 	 */
 	public function enqueue_scripts () {
-		wp_register_script( $this->_token . '-frontend', esc_url( $this->assets_url ) . 'js/cher-frontend' . $this->script_suffix . '.js', array( 'jquery' ), $this->_version );
+		$fileslug = 'cher'; // the asset name without the extension
+		$asset_filepath = sprintf('%s/build/%s.asset.php', $this->dir, $fileslug);
+		if (!file_exists($asset_filepath)) {
+			error_log(sprintf('could not include script file %s as it does not exist', $asset_filepath));
+			return;
+		}
+		$asset = require_once($asset_filepath);
+		if (!$asset) {
+			return;
+		}
+
+		
+
+		wp_register_script(
+			$this->_token . '-frontend',
+			esc_url( trailingslashit( plugins_url( '', $this->file ) ) ) . 'build/cher.js',
+			array( 'jquery' ),
+			$asset['version']
+		);
 		wp_enqueue_script( $this->_token . '-frontend' );
 	} // End enqueue_scripts ()
 

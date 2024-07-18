@@ -1,0 +1,16 @@
+{
+  "name": "cher",
+  "version": "2.2.0",
+  "description": "Easy management of social profiles and social share links for developers.",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build src/cher.js",
+    "start": "wp-scripts start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@wordpress/scripts": "^26.9.0"
+  }
+}

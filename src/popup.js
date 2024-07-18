@@ -1,13 +1,16 @@
 (function() {
-    var links;
-
     /**
      * Open share link popup
      */
     function openPopup(event) {
-        var width, height,
-            id = this.id,
-            url = this.href;
+        let width, height;
+    	const id = this.id,
+              url = this.href;
+
+		const excludedIds = ['cher-link-email', 'cher-link-link'];
+		if (excludedIds.includes(id)) {
+			return;
+		}
 
         switch (id) {
 
@@ -36,19 +39,18 @@
                 height = 330;
         }
 
-        if (id !== 'cher-link-email') {
-            event.preventDefault();
-            window.open(url, id, 'status=no,height=' + height + ',width=' + width + ',resizable=yes,toolbar=no,menubar=no,scrollbars=no,location=no,directories=no');
-        }
+        event.preventDefault();
+        window.open(url, id, 'status=no,height=' + height + ',width=' + width + ',resizable=yes,toolbar=no,menubar=no,scrollbars=no,location=no,directories=no');
     }
 
     function onDocumentReady() {
-
         // Click event for share links
-        links = document.querySelectorAll('.cher-link');
-        for (var i = 0; i < links.length; i++) {
-            links[i].addEventListener('click', openPopup);
-        }
+        const links = document.querySelectorAll('.cher-link');
+		if (!links) {
+			return;
+		}
+
+		links.forEach(l => l.addEventListener('click', openPopup));
     }
 
     document.addEventListener('DOMContentLoaded', function() {
