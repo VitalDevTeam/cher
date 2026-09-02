@@ -146,12 +146,10 @@ class Cher_Plugin_Template {
 			return;
 		}
 
-		
-
 		wp_register_script(
 			$this->_token . '-frontend',
 			esc_url( trailingslashit( plugins_url( '', $this->file ) ) ) . 'build/cher.js',
-			array( 'jquery' ),
+			array(),
 			$asset['version']
 		);
 		wp_enqueue_script( $this->_token . '-frontend' );
